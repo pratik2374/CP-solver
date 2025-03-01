@@ -13,7 +13,7 @@ api_key = st.sidebar.text_input("Enter API Key", type="password")
 
 model_name = st.sidebar.selectbox("Select Open Source model", ["Deepseek-r1-distill-llama-70b"])
 st.sidebar.write("Programming Language")
-language = st.sidebar.selectbox("Select Programming Language", ["C", "python", "java", "c++"], index=0)
+language = st.sidebar.selectbox("Select Programming Language", ["c", "python", "java", "c++"], index=0)
 
 def generator(Cprompt, problem_statement): 
     prompt=ChatPromptTemplate.from_messages([
@@ -23,7 +23,7 @@ def generator(Cprompt, problem_statement):
       
     chain=prompt|model
 
-    respone = chain.invoke({"messages":[HumanMessage(content=problem_statement)]})
+    response = chain.invoke({"messages":[HumanMessage(content=problem_statement)]})
     return response.content
 
 
@@ -31,10 +31,18 @@ def code(problem_statement):
     Cprompt = f"You are a student who solves Coding problems in {language} language. You have to solve a problem with two modules brute force and optimized approach approach in single programme. with proper modules and main function.you have to give just code no explantion, no comments is needed. and alaways start the coding part with ```c\n and end with \n```"
     solution = generator(Cprompt, problem_statement)
 
-    cleaned_content = re.search(r'```c\n(.*?)\n```', solution, re.DOTALL).group(1) 
+    cleaned_content = re.search(fr'```{language}(.*?)```', solution, re.DOTALL)
+    if cleaned_content:
+        cleaned_content = cleaned_content.group(1).strip()
+    else:
+        cleaned_content = solution.strip()
 
-    with open("code.c", "w") as file:
+
+    file_extensions = {"c": "c", "python": "py", "java": "java", "c++": "cpp"}
+    file_name = f"code.{file_extensions[language]}"
+    with open(file_name, "w") as file:
         file.write(cleaned_content)
+
     
     st.code(cleaned_content, language=language)
     return cleaned_content
@@ -47,6 +55,8 @@ def complexity(cleaned_content):
 
     with open("complexity.txt", "w") as file:
         file.write(cleaned_content)
+
+    
 
 def testcases(code) :
     Tprompt = f"You are a code analyzer who analyzes Coding problems codes in {language} language and gives appropriate test cases to run programme and check it's proper functionality. You have to analyze the code and provide test cases in .md format tables having colums of sample inputs and other column of sample output."
@@ -77,19 +87,13 @@ if api_key:
                 testcases(cleaned_code)
 
             elif option == "Analyze Complexity":
-                cleaned_code = st.text_area("Enter your code here:")
+                cleaned_code = st_ace(language=language, theme="monokai", height=200)
                 complexity(cleaned_code)
-                cleaned_code = code(problem_statement)
-                prompt += "Analyze the time and space complexity.\n"
-            if testcases:
-                prompt += "Provide sample test cases.\n"
+                testcases(cleaned_code)
+            elif option == "Generate Test Cases":
+                cleaned_code = st_ace(language=language, theme="monokai", height=200)
+                testcases(cleaned_code)
 
-            # Get response from model
-            response = model.invoke(prompt)
-            
-            # Display output
-            st.write("### Solution:")
-            st.write(response)
         else:
             st.warning("Please enter a problem statement.")
 else:

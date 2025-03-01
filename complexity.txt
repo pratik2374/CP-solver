@@ -1,21 +1,26 @@
 
 
-The time complexity for both sorting functions is analyzed as follows:
+The code provided consists of two sorting algorithms for an array containing only 0s, 1s, and 2s. Let's analyze the time complexity for each approach.
 
-1. **Brute Force Sort:**
-   - **Time Complexity:** O(n)
-     - The function first counts each element in O(n) time.
-     - It then reconstructs the array in O(n) time.
-     - Total time is O(n) + O(n) = O(n).
-   - **Space Complexity:** O(n)
-     - It creates a copy of the original array.
+**Brute Force Method:**
+1. **Counting Phase:** The algorithm iterates through the array once to count the occurrences of 0s, 1s, and 2s. This is O(n), where n is the number of elements.
+2. **Filling Phase:** It then iterates three times over the array to place the 0s, 1s, and 2s in their respective positions. Each loop runs in O(n) time, but combined they process each element once, resulting in O(n) time.
 
-2. **Optimized Sort (Dutch National Flag):**
-   - **Time Complexity:** O(n)
-     - Each element is processed exactly once in a single pass.
-   - **Space Complexity:** O(1)
-     - The sorting is done in-place with no additional arrays.
+   **Total Time Complexity:** O(n) + O(n) = O(n)
+
+**Optimized Method (Three-Pointer Technique):**
+1. The algorithm uses three pointers (low, mid, high) to sort the array in a single pass. Each element is checked once, and each operation (swap, increment/decrement pointers) is O(1).
+
+   **Total Time Complexity:** O(n)
+
+**Conclusion:**
+Both methods achieve a time complexity of O(n), making them efficient for sorting arrays of 0s, 1s, and 2s.
 
 **Answer:**
 
-The brute force method has a time complexity of O(n) and a space complexity of O(n), while the optimized method also has a time complexity of O(n) but with a space complexity of O(1). Both are efficient for their respective approaches.
+The brute force method has a time complexity of O(n), and the optimized method also has a time complexity of O(n). Both methods efficiently sort the array in linear time. 
+
+The time complexities are:
+
+- Brute Force: O(n)
+- Optimized: O(n)
