@@ -4,3 +4,4 @@ python-dotenv
 ipykernel
 langchain_groq
 langchain_core
+streamlit-ace

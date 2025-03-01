@@ -2,6 +2,7 @@ import streamlit as st
 from langchain_core.prompts import ChatPromptTemplate,MessagesPlaceholder
 from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage
+from streamlit_ace import st_ace
 import re
 
 st.title('CP Homework Solver')
@@ -47,14 +48,21 @@ def complexity(cleaned_content):
     with open("complexity.txt", "w") as file:
         file.write(cleaned_content)
 
+def testcases(code) :
+    Tprompt = f"You are a code analyzer who analyzes Coding problems codes in {language} language and gives appropriate test cases to run programme and check it's proper functionality. You have to analyze the code and provide test cases in .md format tables having colums of sample inputs and other column of sample output."
+    solution = generator(Tprompt, code)
+
+    cleaned_content = re.sub(r'<think>.*?</think>', '', solution, flags=re.DOTALL)
+
+    with open("testcase.md", "w") as file:
+        file.write(cleaned_content)
+
 if api_key:
     model = ChatGroq(model=model_name, groq_api_key=api_key)
 
     # Options
     st.sidebar.write("select your needs : ")
-    code = st.sidebar.checkbox("Generate Code")
-    complexity = st.sidebar.checkbox("Analyze Complexity")
-    testcases = st.sidebar.checkbox("Generate Test Cases")
+    option = st.sidebar.radio("Select your needs:", ["Generate Code", "Analyze Complexity", "Generate Test Cases"])
 
     # Problem input
     problem_statement = st.text_area("Enter your CP problem here:")
@@ -63,9 +71,15 @@ if api_key:
         if problem_statement:
             prompt = f"Problem:\n{problem_statement}\n\n"
 
-            if code:
+            if option == "Generate Code":
                 cleaned_code = code(problem_statement)
-            if complexity:
+                complexity(cleaned_code)
+                testcases(cleaned_code)
+
+            elif option == "Analyze Complexity":
+                cleaned_code = st.text_area("Enter your code here:")
+                complexity(cleaned_code)
+                cleaned_code = code(problem_statement)
                 prompt += "Analyze the time and space complexity.\n"
             if testcases:
                 prompt += "Provide sample test cases.\n"
