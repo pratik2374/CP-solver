@@ -1,8 +1,8 @@
 import tiktoken
 
-enc = tiktoken.get_encoding()  # Adjust for your model
+enc = tiktoken.get_encoding("cl100k_base")  # Adjust for your model
 
-with open('/d:/CP solver/code.c', 'r') as file:
+with open('code.c', 'r') as file:
     command = file.read()
 token_count = len(enc.encode(command))
 
