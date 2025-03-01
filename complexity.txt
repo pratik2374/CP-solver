@@ -1,0 +1,21 @@
+
+
+The time complexity for both sorting functions is analyzed as follows:
+
+1. **Brute Force Sort:**
+   - **Time Complexity:** O(n)
+     - The function first counts each element in O(n) time.
+     - It then reconstructs the array in O(n) time.
+     - Total time is O(n) + O(n) = O(n).
+   - **Space Complexity:** O(n)
+     - It creates a copy of the original array.
+
+2. **Optimized Sort (Dutch National Flag):**
+   - **Time Complexity:** O(n)
+     - Each element is processed exactly once in a single pass.
+   - **Space Complexity:** O(1)
+     - The sorting is done in-place with no additional arrays.
+
+**Answer:**
+
+The brute force method has a time complexity of O(n) and a space complexity of O(n), while the optimized method also has a time complexity of O(n) but with a space complexity of O(1). Both are efficient for their respective approaches.
